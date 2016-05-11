@@ -1,0 +1,107 @@
+= content head
+  link href=/public/css/notification.css rel=stylesheet
+
+= content main
+  h2 Select Classes
+  table.table.table-bordered.table-condensed
+    thead
+      tr.text-center
+        td Period 1
+        td Period 2
+        td Period 3
+        td Period 4
+        td Period 5
+        td Period 6
+        td Period 7
+    tbody
+      tr.text-center
+        td
+          select.form-control
+            {{if not .IsClasses}}
+              option value=none selected=true disabled=true Select A Class
+            {{else}}
+              option value=none disabled=true Select A Class
+            {{end}}
+            {{range .Classes}}
+              {{if and (gt (len $.PrevClasses) 0) (eq .Id (index $.PrevClasses 0))}}
+                option value={{.Id}} selected=true {{.Name}}
+              {{else}}
+                option value={{.Id}} {{.Name}}
+              {{end}}
+            {{end}}
+        td
+          select.form-control
+            {{if not .IsClasses}}
+              option value=none selected=true disabled=true Select A Class
+            {{else}}
+              option value=none disabled=true Select A Class
+            {{end}}
+            {{range .Classes}}
+              {{if and (gt (len $.PrevClasses) 1) (eq .Id (index $.PrevClasses 1))}}
+                option value={{.Id}} selected=true {{.Name}}
+              {{else}}
+                option value={{.Id}} {{.Name}}
+              {{end}}
+            {{end}}
+        td Core
+        td
+          select.form-control
+            {{if not .IsClasses}}
+              option value=none selected=true disabled=true Select A Class
+            {{else}}
+              option value=none disabled=true Select A Class
+            {{end}}
+            {{range .Classes}}
+              {{if and (gt (len $.PrevClasses) 2) (eq .Id (index $.PrevClasses 2))}}
+                option value={{.Id}} selected=true {{.Name}}
+              {{else}}
+                option value={{.Id}} {{.Name}}
+              {{end}}
+            {{end}}
+        td
+          select.form-control
+            {{if not .IsClasses}}
+              option value=none selected=true disabled=true Select A Class
+            {{else}}
+              option value=none disabled=true Select A Class
+            {{end}}
+            {{range .Classes}}
+              {{if and (gt (len $.PrevClasses) 3) (eq .Id (index $.PrevClasses 3))}}
+                option value={{.Id}} selected=true {{.Name}}
+              {{else}}
+                option value={{.Id}} {{.Name}}
+              {{end}}
+            {{end}}
+        td
+          select.form-control
+            {{if not .IsClasses}}
+              option value=none selected=true disabled=true Select A Class
+            {{else}}
+              option value=none disabled=true Select A Class
+            {{end}}
+            {{range .Classes}}
+              {{if and (gt (len $.PrevClasses) 4) (eq .Id (index $.PrevClasses 4))}}
+                option value={{.Id}} selected=true {{.Name}}
+              {{else}}
+                option value={{.Id}} {{.Name}}
+              {{end}}
+            {{end}}
+        td
+          select.form-control
+            {{if not .IsClasses}}
+              option value=none selected=true disabled=true Select A Class
+            {{else}}
+              option value=none disabled=true Select A Class
+            {{end}}
+            {{range .Classes}}
+              {{if and (gt (len $.PrevClasses) 5) (eq .Id (index $.PrevClasses 5))}}
+                option value={{.Id}} selected=true {{.Name}}
+              {{else}}
+                option value={{.Id}} {{.Name}}
+              {{end}}
+            {{end}}
+  button#save.btn.btn-success Save
+
+= content foot
+  script src=/public/js/notification.js
+  script src=/public/js/classes.js
