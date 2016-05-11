@@ -38,7 +38,7 @@ func main() {
 	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
 	http.HandleFunc("/", AllHandler)
 
-	log.Fatal(http.ListenAndServe(":"+Port, nil))
+	log.Fatal(http.ListenAndServe("localhost:"+Port, nil))
 }
 
 func AllHandler(w http.ResponseWriter, r *http.Request) {
