@@ -22,7 +22,7 @@ var (
 
 func main() {
 	var err error
-	store, err = redistore.NewRediStore(10, "tcp", "127.0.01:6379", "", []byte("sessions"))
+	store, err = redistore.NewRediStore(10, "tcp", "127.0.0.1:6379", "", []byte("sessions"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +38,7 @@ func main() {
 	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
 	http.HandleFunc("/", AllHandler)
 
-	log.Fatal(http.ListenAndServe("localhost:"+Port, nil))
+	log.Fatal(http.ListenAndServe(":"+Port, nil))
 }
 
 func AllHandler(w http.ResponseWriter, r *http.Request) {
