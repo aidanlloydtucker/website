@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"html/template"
 	"net/http"
 	"reflect"
 	"sort"
@@ -175,7 +176,13 @@ func HomeworkAssignmentsHandler(w http.ResponseWriter, r *http.Request) {
 // TODO: Make not sort every load
 func HomeworkGETClassesHandler(w http.ResponseWriter, r *http.Request) {
 
-	tpl, err := ace.Load("views/base", "views/classes", nil)
+	tpl, err := ace.Load("views/base", "views/classes", &ace.Options{
+		FuncMap: template.FuncMap{
+			"SelectIf": func(prevClasses []string, classPer int, id string) bool {
+				return len(prevClasses) > classPer && id == prevClasses[classPer]
+			},
+		},
+	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

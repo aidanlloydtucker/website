@@ -23,7 +23,7 @@
               option value=none disabled=true Select A Class
             {{end}}
             {{range .Classes}}
-              {{if and (gt (len $.PrevClasses) 0) (eq .Id (index $.PrevClasses 0))}}
+              {{if SelectIf $.PrevClasses 0 .Id}}
                 option value={{.Id}} selected=true {{.Name}}
               {{else}}
                 option value={{.Id}} {{.Name}}
@@ -37,7 +37,7 @@
               option value=none disabled=true Select A Class
             {{end}}
             {{range .Classes}}
-              {{if and (gt (len $.PrevClasses) 1) (eq .Id (index $.PrevClasses 1))}}
+              {{if SelectIf $.PrevClasses 1 .Id}}
                 option value={{.Id}} selected=true {{.Name}}
               {{else}}
                 option value={{.Id}} {{.Name}}
@@ -52,7 +52,7 @@
               option value=none disabled=true Select A Class
             {{end}}
             {{range .Classes}}
-              {{if and (gt (len $.PrevClasses) 2) (eq .Id (index $.PrevClasses 2))}}
+              {{if SelectIf $.PrevClasses 2 .Id}}
                 option value={{.Id}} selected=true {{.Name}}
               {{else}}
                 option value={{.Id}} {{.Name}}
@@ -66,7 +66,7 @@
               option value=none disabled=true Select A Class
             {{end}}
             {{range .Classes}}
-              {{if and (gt (len $.PrevClasses) 3) (eq .Id (index $.PrevClasses 3))}}
+              {{if SelectIf $.PrevClasses 3 .Id}}
                 option value={{.Id}} selected=true {{.Name}}
               {{else}}
                 option value={{.Id}} {{.Name}}
@@ -80,7 +80,7 @@
               option value=none disabled=true Select A Class
             {{end}}
             {{range .Classes}}
-              {{if and (gt (len $.PrevClasses) 4) (eq .Id (index $.PrevClasses 4))}}
+              {{if SelectIf $.PrevClasses 4 .Id}}
                 option value={{.Id}} selected=true {{.Name}}
               {{else}}
                 option value={{.Id}} {{.Name}}
@@ -94,7 +94,7 @@
               option value=none disabled=true Select A Class
             {{end}}
             {{range .Classes}}
-              {{if and (gt (len $.PrevClasses) 5) (eq .Id (index $.PrevClasses 5))}}
+              {{if SelectIf $.PrevClasses 5 .Id}}
                 option value={{.Id}} selected=true {{.Name}}
               {{else}}
                 option value={{.Id}} {{.Name}}
