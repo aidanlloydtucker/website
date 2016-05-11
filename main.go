@@ -16,6 +16,10 @@ var router *mux.Router
 
 const sessionName = "535510N"
 
+var (
+	Port string
+)
+
 func main() {
 	var err error
 	store, err = redistore.NewRediStore(10, "tcp", "127.0.01:6379", "", []byte("sessions"))
@@ -34,7 +38,7 @@ func main() {
 	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
 	http.HandleFunc("/", AllHandler)
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":"+Port, nil))
 }
 
 func AllHandler(w http.ResponseWriter, r *http.Request) {
