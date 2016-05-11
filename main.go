@@ -8,7 +8,10 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/yosssi/ace"
+	"github.com/yosssi/ace-proxy"
 )
+
+var p = proxy.New(&ace.Options{BaseDir: "views"})
 
 var store *redistore.RediStore
 
@@ -46,7 +49,7 @@ func AllHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	tpl, err := ace.Load("views/base", "views/index", nil)
+	tpl, err := p.Load("base", "index", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

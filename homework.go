@@ -88,7 +88,7 @@ func HomeworkHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tpl, err := ace.Load("views/base", "views/homework", nil)
+	tpl, err := p.Load("base", "homework", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -176,7 +176,7 @@ func HomeworkAssignmentsHandler(w http.ResponseWriter, r *http.Request) {
 // TODO: Make not sort every load
 func HomeworkGETClassesHandler(w http.ResponseWriter, r *http.Request) {
 
-	tpl, err := ace.Load("views/base", "views/classes", &ace.Options{
+	tpl, err := p.Load("base", "classes", &ace.Options{
 		FuncMap: template.FuncMap{
 			"SelectIf": func(prevClasses []string, classPer int, id string) bool {
 				return len(prevClasses) > classPer && id == prevClasses[classPer]
@@ -246,7 +246,7 @@ func HomeworkPUTClassesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func HomeworkAidanHandler(w http.ResponseWriter, r *http.Request) {
-	tpl, err := ace.Load("views/base", "views/homework", nil)
+	tpl, err := p.Load("base", "homework", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
