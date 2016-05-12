@@ -6,7 +6,6 @@
     margin-bottom: 40px;
     margin-top: 150px;
     }
-
 = content main
   .text-center
     h1 Error {{.Status}}

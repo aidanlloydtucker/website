@@ -176,7 +176,7 @@ func HomeworkAssignmentsHandler(w http.ResponseWriter, r *http.Request) {
 // TODO: Make not sort every load
 func HomeworkGETClassesHandler(w http.ResponseWriter, r *http.Request) {
 
-	tpl, err := p.Load("base", "classes", &ace.Options{
+	tpl, err := p.Load("views/base", "views/classes", &ace.Options{
 		FuncMap: template.FuncMap{
 			"SelectIf": func(prevClasses []string, classPer int, id string) bool {
 				return len(prevClasses) > classPer && id == prevClasses[classPer]
