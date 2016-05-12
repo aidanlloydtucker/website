@@ -1,8 +1,12 @@
 PORT = 8080
+CERTFILE = ""
+KEYFILE = ""
 
 # Setup the -ldflags option for go build here, interpolate the variable values
 
 LDFLAGS += -X \"main.Port=$(PORT)\"
+LDFLAGS += -X \"main.CertFile=$(CERTFILE)\"
+LDFLAGS += -X \"main.KeyFile=$(KEYFILE)\"
 
 .PHONY: build clean
 

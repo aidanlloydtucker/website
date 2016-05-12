@@ -20,7 +20,9 @@ var router *mux.Router
 const sessionName = "535510N"
 
 var (
-	Port string
+	Port     string
+	CertFile string
+	KeyFile  string
 )
 
 func main() {
@@ -44,9 +46,15 @@ func main() {
 	router.HandleFunc("/homework/classes", HomeworkPUTClassesHandler).Methods("PUT")
 	router.HandleFunc("/homework/classes", HomeworkGETClassesHandler).Methods("GET")
 	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
+	router.PathPrefix("/keybase/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
 	http.HandleFunc("/", AllHandler)
 
-	log.Fatal(http.ListenAndServe(":"+Port, nil))
+	if CertFile != "" && KeyFile != "" {
+		log.Fatal(http.ListenAndServeTLS(":"+Port, CertFile, KeyFile, nil))
+	} else {
+		log.Fatal(http.ListenAndServe(":"+Port, nil))
+	}
+
 }
 
 func AllHandler(w http.ResponseWriter, r *http.Request) {
