@@ -31,7 +31,12 @@ func main() {
 	}
 	defer store.Close()
 
+	if Port == "" {
+		Port = "8080"
+	}
+
 	router = mux.NewRouter()
+	router.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
 	router.HandleFunc("/", HomeHandler).Methods("GET")
 	router.HandleFunc("/homework", HomeworkHandler).Methods("GET")
 	router.HandleFunc("/homework/aidan", HomeworkAidanHandler).Methods("GET")
@@ -46,6 +51,28 @@ func main() {
 
 func AllHandler(w http.ResponseWriter, r *http.Request) {
 	router.ServeHTTP(w, r)
+}
+
+func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
+	ErrorHandler(w, r, "Not Found: The page you requested could not be found.", 404)
+}
+
+func ErrorHandler(w http.ResponseWriter, r *http.Request, errStr string, errNum int) {
+	tpl, err := p.Load("base", "error", nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	data := map[string]interface{}{
+		"Status":  errNum,
+		"Message": errStr,
+	}
+
+	if err := tpl.Execute(w, data); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
