@@ -58,7 +58,7 @@ func main() {
 		httpsServer.HandleFunc("/", AllHandler)
 
 		go func() {
-			log.Fatal(http.ListenAndServe("localhost:8081", httpServer))
+			log.Fatal(http.ListenAndServe(":8081", httpServer))
 		}()
 
 		log.Fatal(http.ListenAndServeTLS(":"+HttpsPort, CertFile, KeyFile, httpsServer))
@@ -69,7 +69,6 @@ func main() {
 }
 
 func AllHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.URL.String())
 	router.ServeHTTP(w, r)
 }
 
