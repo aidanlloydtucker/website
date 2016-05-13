@@ -20,9 +20,10 @@ var router *mux.Router
 const sessionName = "535510N"
 
 var (
-	Port     string
-	CertFile string
-	KeyFile  string
+	HttpPort  string
+	HttpsPort string
+	CertFile  string
+	KeyFile   string
 )
 
 func main() {
@@ -33,8 +34,8 @@ func main() {
 	}
 	defer store.Close()
 
-	if Port == "" {
-		Port = "8080"
+	if HttpPort == "" {
+		HttpPort = "8080"
 	}
 
 	router = mux.NewRouter()
@@ -47,17 +48,31 @@ func main() {
 	router.HandleFunc("/homework/classes", HomeworkGETClassesHandler).Methods("GET")
 	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
 	router.PathPrefix("/keybase/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
-	http.HandleFunc("/", AllHandler)
+	//http.HandleFunc("/", AllHandler)
 
-	if CertFile != "" && KeyFile != "" {
-		log.Fatal(http.ListenAndServeTLS(":"+Port, CertFile, KeyFile, nil))
+	if CertFile != "" && KeyFile != "" && HttpsPort != "" {
+		httpServer := http.NewServeMux()
+		httpServer.HandleFunc("/", AllHandler)
+
+		httpsServer := http.NewServeMux()
+		httpsServer.HandleFunc("/", AllHandler)
+
+		go func() {
+			err := http.ListenAndServe("localhost:8081", httpServer)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}()
+
+		log.Fatal(http.ListenAndServeTLS(":"+HttpsPort, CertFile, KeyFile, httpsServer))
 	} else {
-		log.Fatal(http.ListenAndServe(":"+Port, nil))
+		log.Fatal(http.ListenAndServe(":"+HttpPort, http.HandlerFunc(AllHandler)))
 	}
 
 }
 
 func AllHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.URL.String())
 	router.ServeHTTP(w, r)
 }
 

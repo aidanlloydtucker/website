@@ -1,10 +1,12 @@
-PORT = 8080
+HTTP_PORT = 8080
+HTTPS_PORT = ""
 CERTFILE = ""
 KEYFILE = ""
 
 # Setup the -ldflags option for go build here, interpolate the variable values
 
-LDFLAGS += -X \"main.Port=$(PORT)\"
+LDFLAGS += -X \"main.HttpPort=$(HTTP_PORT)\"
+LDFLAGS += -X \"main.HttpsPort=$(HTTPS_PORT)\"
 LDFLAGS += -X \"main.CertFile=$(CERTFILE)\"
 LDFLAGS += -X \"main.KeyFile=$(KEYFILE)\"
 
