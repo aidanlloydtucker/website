@@ -3,9 +3,11 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"gopkg.in/boj/redistore.v1"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/yosssi/ace"
 	"github.com/yosssi/ace-proxy"
@@ -48,21 +50,17 @@ func main() {
 	router.HandleFunc("/homework/classes", HomeworkGETClassesHandler).Methods("GET")
 	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
 	router.PathPrefix("/keybase/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
-	//http.HandleFunc("/", AllHandler)
+
+	allHandler := handlers.CompressHandler(handlers.LoggingHandler(os.Stdout, router))
 
 	if CertFile != "" && KeyFile != "" && HttpsPort != "" {
+		go http.ListenAndServe(":"+HttpPort, allHandler)
 
-		go http.ListenAndServe(":"+HttpPort, http.HandlerFunc(AllHandler))
-
-		log.Fatal(http.ListenAndServeTLS(":"+HttpsPort, CertFile, KeyFile, http.HandlerFunc(AllHandler)))
+		log.Fatal(http.ListenAndServeTLS(":"+HttpsPort, CertFile, KeyFile, allHandler))
 	} else {
-		log.Fatal(http.ListenAndServe(":"+HttpPort, http.HandlerFunc(AllHandler)))
+		log.Fatal(http.ListenAndServe(":"+HttpPort, allHandler))
 	}
 
-}
-
-func AllHandler(w http.ResponseWriter, r *http.Request) {
-	router.ServeHTTP(w, r)
 }
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
