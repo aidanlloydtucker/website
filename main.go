@@ -51,17 +51,10 @@ func main() {
 	//http.HandleFunc("/", AllHandler)
 
 	if CertFile != "" && KeyFile != "" && HttpsPort != "" {
-		httpServer := http.NewServeMux()
-		httpServer.HandleFunc("/", AllHandler)
 
-		httpsServer := http.NewServeMux()
-		httpsServer.HandleFunc("/", AllHandler)
+		go http.ListenAndServe(":8081", http.HandlerFunc(AllHandler))
 
-		go func() {
-			http.ListenAndServe(":8081", httpServer)
-		}()
-
-		log.Fatal(http.ListenAndServeTLS(":"+HttpsPort, CertFile, KeyFile, httpsServer))
+		log.Fatal(http.ListenAndServeTLS(":"+HttpsPort, CertFile, KeyFile, http.HandlerFunc(AllHandler)))
 	} else {
 		log.Fatal(http.ListenAndServe(":"+HttpPort, http.HandlerFunc(AllHandler)))
 	}
