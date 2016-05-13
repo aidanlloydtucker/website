@@ -49,7 +49,7 @@ func main() {
 	router.HandleFunc("/homework/classes", HomeworkPUTClassesHandler).Methods("PUT")
 	router.HandleFunc("/homework/classes", HomeworkGETClassesHandler).Methods("GET")
 	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
-	router.PathPrefix("/keybase/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
+	router.PathPrefix("/.well-known/").Handler(http.StripPrefix("/.well-known/", http.FileServer(http.Dir("./.well-known/"))))
 
 	allHandler := handlers.CompressHandler(handlers.LoggingHandler(os.Stdout, router))
 
