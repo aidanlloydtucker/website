@@ -15,8 +15,10 @@ LDFLAGS += -X \"main.KeyFile=$(KEYFILE)\"
 build:
 	go build -ldflags "$(LDFLAGS)"
 
-install:
+deps:
 	go get -d ./...
+
+install: deps
 	go install -ldflags "$(LDFLAGS)"
 
 clean:
