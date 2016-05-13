@@ -58,7 +58,7 @@ func main() {
 		httpsServer.HandleFunc("/", AllHandler)
 
 		go func() {
-			log.Fatal(http.ListenAndServe(":8081", httpServer))
+			http.ListenAndServe(":8081", httpServer)
 		}()
 
 		log.Fatal(http.ListenAndServeTLS(":"+HttpsPort, CertFile, KeyFile, httpsServer))
