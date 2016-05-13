@@ -52,11 +52,12 @@ func main() {
 
 	if CertFile != "" && KeyFile != "" && HttpsPort != "" {
 
-		go log.Fatal(http.ListenAndServeTLS(":"+HttpsPort, CertFile, KeyFile, http.HandlerFunc(AllHandler)))
+		go http.ListenAndServe(":"+HttpPort, http.HandlerFunc(AllHandler))
 
+		log.Fatal(http.ListenAndServeTLS(":"+HttpsPort, CertFile, KeyFile, http.HandlerFunc(AllHandler)))
+	} else {
+		log.Fatal(http.ListenAndServe(":"+HttpPort, http.HandlerFunc(AllHandler)))
 	}
-
-	log.Fatal(http.ListenAndServe(":"+HttpPort, http.HandlerFunc(AllHandler)))
 
 }
 
