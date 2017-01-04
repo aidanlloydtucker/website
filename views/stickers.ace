@@ -1,7 +1,8 @@
 = content head
 
 = content main
-  h1 Stickers
-  form action="stickers/sticker" method="post" enctype="multipart/form-data" Select image to upload:
+  h1 Sticker Converter
+  form action="stickers/sticker" method="post" enctype="multipart/form-data" Select image to convert to a sticker:
     input type="file" name="upload" accept="image/*"
-    input type="submit" value="Upload Image"
+    br
+    input.btn.btn-primary type="submit" value="Convert!"
