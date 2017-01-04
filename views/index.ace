@@ -7,21 +7,22 @@
   h2 Projects
   hr
   h3
-    a href=homework Homework App
-  p.desc A way to compile all of my school's homework pages onto one easy to use page
+    a href=https://github.com/billybobjoeaglt/matterhorn_bot target=_blank Matterhorn Bot
+  p.desc A multiuse Telegram bot written in Go
+  h3
+    a href=https://github.com/billybobjoeaglt/who_bot target=_blank Who Bot
+  p.desc A Telegram bot that displays a list of who voted yes to a question you posted
+  h3
+    a href=stickers Telegram Sticker Converter
+  p.desc Converts images into a format that you can use to crate&nbsp;
+    a href=https://t.me/Stickers Telegram stickers
   h3
     a href=https://github.com/billybobjoeaglt/chatlab target=_blank Chatlab
   p.desc A P2P encrypted chat client using&nbsp;
     a href=https://keybase.io keybase.io
   h3
-    a href=https://github.com/project-galatea target=_blank Galatea
-  p.desc A telegram bot that uses a neural network to talk. To maintain CPU efficiency, a load balancing feature was implemented
-  h3
     a href=https://github.com/billybobjoeaglt/website target=_blank This Website
-  p.desc My personal website using go
+  p.desc My personal website written in Go
   h3
     a href=https://github.com/billybobjoeaglt/telegram-prediction target=_blank Telegram Prediction Bot
   p.desc A telegram bot using keras LSTM neural networks to predict who would say something next. Also displayed analytics for telegram messages
-  h3
-    a href=https://github.com/leijurv/Kademlia target=_blank Kademlia
-  p.desc An open source multithreaded Java implementation of Kademlia with some additions to the protocol and a GUI

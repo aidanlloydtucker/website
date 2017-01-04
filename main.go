@@ -3,96 +3,81 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
-
-	"gopkg.in/boj/redistore.v1"
-
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
 	"github.com/yosssi/ace"
 	"github.com/yosssi/ace-proxy"
+	"github.com/gin-gonic/gin"
+	"flag"
+	"github.com/gin-gonic/contrib/gzip"
 )
 
 var p = proxy.New(&ace.Options{BaseDir: "views"})
 
-var store *redistore.RediStore
-
-var router *mux.Router
-
-const sessionName = "535510N"
-
-var (
-	HttpPort  string
-	HttpsPort string
-	CertFile  string
-	KeyFile   string
-)
-
 func main() {
-	var err error
-	store, err = redistore.NewRediStore(10, "tcp", "127.0.0.1:6379", "", []byte("sessions"))
-	if err != nil {
-		log.Fatal(err)
+	var httpPort string
+	var httpsPort string
+	var certFile string
+	var keyFile string
+	var prod bool
+
+	flag.StringVar(&httpPort, "port", "8080", "http port")
+	flag.StringVar(&httpsPort, "https", "", "https port")
+	flag.StringVar(&certFile, "cert", "", "cert file for https")
+	flag.StringVar(&keyFile, "key", "", "key file for https")
+	flag.BoolVar(&prod, "prod", false, "is in production")
+
+	flag.Parse()
+
+	if prod {
+		gin.SetMode(gin.ReleaseMode)
 	}
-	defer store.Close()
 
-	if HttpPort == "" {
-		HttpPort = "8080"
-	}
+	r := gin.Default()
 
-	router = mux.NewRouter()
-	router.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
-	router.HandleFunc("/", HomeHandler).Methods("GET")
-	router.HandleFunc("/homework", HomeworkHandler).Methods("GET")
-	router.HandleFunc("/homework/aidan", HomeworkAidanHandler).Methods("GET")
-	router.HandleFunc("/homework/assignments", HomeworkAssignmentsHandler).Methods("GET")
-	router.HandleFunc("/homework/classes", HomeworkPUTClassesHandler).Methods("PUT")
-	router.HandleFunc("/homework/classes", HomeworkGETClassesHandler).Methods("GET")
-	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./static/"))))
-	router.PathPrefix("/.well-known/").Handler(http.StripPrefix("/.well-known/", http.FileServer(http.Dir("./.well-known/"))))
+	r.Use(gzip.Gzip(gzip.DefaultCompression))
 
-	allHandler := handlers.CompressHandler(handlers.LoggingHandler(os.Stdout, router))
+	r.Handle(http.MethodGet, "/", HomeHandler)
+	r.Handle(http.MethodGet, "/stickers", StickersHandler)
+	r.Handle(http.MethodPost, "/stickers/sticker", UploadStickerHandler)
+	r.StaticFS("/public/", http.Dir("./static/"))
+	r.StaticFS("/.well-known/", http.Dir("./.well-known/"))
 
-	if CertFile != "" && KeyFile != "" && HttpsPort != "" {
-		go http.ListenAndServe(":"+HttpPort, allHandler)
+	r.NoRoute(StatusNotFoundHandler)
 
-		log.Fatal(http.ListenAndServeTLS(":"+HttpsPort, CertFile, KeyFile, allHandler))
+
+	if certFile != "" && keyFile != "" && httpsPort != "" {
+		go r.Run(":" + httpPort)
+		log.Fatal(r.RunTLS(":" + httpPort, certFile, keyFile))
 	} else {
-		log.Fatal(http.ListenAndServe(":"+HttpPort, allHandler))
+		log.Fatal(r.Run(":" + httpPort))
 	}
 
 }
 
-func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
-	ErrorHandler(w, r, "Not Found: The page you requested could not be found.", 404)
+func HomeHandler(c *gin.Context) {
+	runTemplate(c, "index", nil)
 }
 
-func ErrorHandler(w http.ResponseWriter, r *http.Request, errStr string, errNum int) {
-	tpl, err := p.Load("base", "error", nil)
+func StatusNotFoundHandler(c *gin.Context) {
+	c.Writer.WriteHeader(http.StatusNotFound)
+
+	runTemplate(c, "error", map[string]string{
+		"Status": "404",
+		"Message": "Page not found.",
+	})
+}
+
+
+func runTemplate(c *gin.Context, innerPath string, data interface{}) {
+	tpl, err := p.Load("base", innerPath, nil)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	data := map[string]interface{}{
-		"Status":  errNum,
-		"Message": errStr,
-	}
+	c.Header("Content-Type", "text/HTML")
 
-	if err := tpl.Execute(w, data); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-}
-
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	tpl, err := p.Load("base", "index", nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	if err := tpl.Execute(w, nil); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	if err := tpl.Execute(c.Writer, data); err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 }

@@ -5,21 +5,16 @@ KEYFILE = ""
 
 # Setup the -ldflags option for go build here, interpolate the variable values
 
-LDFLAGS += -X \"main.HttpPort=$(HTTP_PORT)\"
-LDFLAGS += -X \"main.HttpsPort=$(HTTPS_PORT)\"
-LDFLAGS += -X \"main.CertFile=$(CERTFILE)\"
-LDFLAGS += -X \"main.KeyFile=$(KEYFILE)\"
-
 .PHONY: build clean
 
 build:
-	go build -ldflags "$(LDFLAGS)"
+	go build
 
 deps:
 	go get -d ./...
 
 install: deps
-	go install -ldflags "$(LDFLAGS)"
+	go install
 
 clean:
 	go clean -i ./...
